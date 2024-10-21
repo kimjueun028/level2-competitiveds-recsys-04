@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 from sklearn.neighbors import BallTree
 
 # 위경도를 라디안으로 변환
@@ -14,8 +15,10 @@ def calculate_nearby_stats(main_df, places_dict, radii):
     places_dict: 장소 데이터 딕셔너리, {장소 이름: 장소 데이터프레임}
     radii: 반경 리스트 (예: [300, 500, 1000])
     """
-    
+
     # 위경도를 라디안으로 변환 (main_df에 적용)
+    org_df = main_df.copy()
+    main_df = main_df.drop_duplicates(subset=['latitude', 'longitude']).reset_index(drop=True)[['latitude','longitude']]
     main_df = to_radians(main_df)
 
     # 각 장소 유형별로 BallTree를 생성하여 반경 내 개수를 계산
@@ -44,4 +47,4 @@ def calculate_nearby_stats(main_df, places_dict, radii):
         if place_name == 'park':
             main_df['park_near_area'] = add_df.iloc[distances_index.flatten(), 2].reset_index(drop=True)
 
-    return main_df
+    return pd.merge(org_df,main_df,on=['latitude','longitude'],how='left')
