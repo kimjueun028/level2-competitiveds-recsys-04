@@ -1,20 +1,18 @@
 import os
 import pandas as pd
 import numpy as np
+import sys
+sys.path.append('..')
 import xgboost as xgb
-
 from sklearn.metrics import mean_absolute_error
 from sklearn.cluster import KMeans
-from HuberLoss import custom_loss, custom_metric
+from src.utils.HuberLoss import custom_loss, custom_metric
 
 RANDOM_SEED = 42
 np.random.seed(RANDOM_SEED)
 
-
-print(os.getcwd())
-
-train_df = pd.read_csv("../../data/train_aftercountplace.csv")
-test_df = pd.read_csv("../../data/test_aftercountplace.csv")
+train_df = pd.read_csv("../data/train_aftercountplace.csv")
+test_df = pd.read_csv("../data/test_aftercountplace.csv")
 
 train_df = train_df.drop(columns=['index'])
 test_df = test_df.drop(columns=['index'])
@@ -61,7 +59,7 @@ for i in range(best_k):
         'objective': custom_loss,   # default : reg:squarederror  # loss- train
         'eval_metric': custom_metric,   # default : rmse # valid
         'seed': RANDOM_SEED,
-        'n_estimators': 10,
+        'n_estimators': 500,
         'learning_rate': 0.02,   # default : 0.3
         'max_depth': 12,
         # 'subsample': 0.9,
