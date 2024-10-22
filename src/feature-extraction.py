@@ -50,8 +50,10 @@ def main(config_path):
 
     # 장소 통계 계산
     places_dict = {'park': park_df, 'school': school_df, 'subway': subway_df}
-    train_df = calculate_nearby_stats(train_df, places_dict, radii)
-    test_df = calculate_nearby_stats(test_df, places_dict, radii)
+    radii_dict = {'park': radii['park'], 'school': radii['school'], 'subway': radii['subway']}
+
+    train_df = calculate_nearby_stats(train_df, places_dict, radii_dict)
+    test_df = calculate_nearby_stats(test_df, places_dict, radii_dict)
 
     # 결과 저장
     save_data(train_df, data_path / "train_aftercountplace.csv")
