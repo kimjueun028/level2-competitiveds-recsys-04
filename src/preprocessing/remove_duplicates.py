@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-import pickle
+
 
 train_data = pd.read_csv('data/train.csv',index_col=0)
 
@@ -109,5 +109,8 @@ def search_df_del_fun(x):
 
 all_loc.apply(search_df_fun,axis=1)
 
-with open('config/index_list.pkl', 'rb') as f:
-    pickle.dump(list(df.index), f)
+df.to_csv('../drop_duplicate_train_df.csv')
+
+
+
+
