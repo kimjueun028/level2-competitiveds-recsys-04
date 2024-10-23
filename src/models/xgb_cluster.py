@@ -1,16 +1,18 @@
 import os
 import pandas as pd
 import numpy as np
+import sys
+sys.path.append('..')
 import xgboost as xgb
-
 from sklearn.metrics import mean_absolute_error
 from sklearn.cluster import KMeans
+from src.utils.HuberLoss import custom_loss, custom_metric
 
 RANDOM_SEED = 42
 np.random.seed(RANDOM_SEED)
 
-train_df = pd.read_csv("../../data/train_aftercountplace.csv")
-test_df = pd.read_csv("../../data/test_aftercountplace.csv")
+train_df = pd.read_csv("../data/train_aftercountplace.csv")
+test_df = pd.read_csv("../data/test_aftercountplace.csv")
 
 train_df = train_df.drop(columns=['index'])
 test_df = test_df.drop(columns=['index'])
@@ -34,9 +36,8 @@ best_k = 10
 kmeans = KMeans(n_clusters=best_k, random_state=RANDOM_SEED)
 kmeans.fit(X_total[['latitude', 'longitude']])
 total_pred = kmeans.predict(X_total[['latitude', 'longitude']])
-
-# test 데이터에 대한 cluster 예측
 test_pred = kmeans.predict(X_test[['latitude', 'longitude']])
+
 
 xgb_models = []
 best_iterations = []
@@ -55,8 +56,8 @@ for i in range(best_k):
     y_valid_cluster = y_valid.iloc[valid_cluster_idx]
 
     xgb_params = {
-        'objective': 'reg:absoluteerror',   # default : reg:squarederror  # loss- train
-        'eval_metric': 'mae',   # default : rmse # valid
+        'objective': custom_loss,   # default : reg:squarederror  # loss- train
+        'eval_metric': custom_metric,   # default : rmse # valid
         'seed': RANDOM_SEED,
         'n_estimators': 500,
         'learning_rate': 0.02,   # default : 0.3
