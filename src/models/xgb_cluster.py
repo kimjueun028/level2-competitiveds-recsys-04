@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import numpy as np
 import sys
-sys.path.append('..')
+sys.path.append('.')
 import xgboost as xgb
 from sklearn.metrics import mean_absolute_error
 from sklearn.cluster import KMeans
@@ -11,8 +11,8 @@ from src.utils.HuberLoss import custom_loss, custom_metric
 RANDOM_SEED = 42
 np.random.seed(RANDOM_SEED)
 
-train_df = pd.read_csv("../data/train_aftercountplace.csv")
-test_df = pd.read_csv("../data/test_aftercountplace.csv")
+train_df = pd.read_csv("data/train_aftercountplace.csv")
+test_df = pd.read_csv("data/test_aftercountplace.csv")
 
 train_df = train_df.drop(columns=['index'])
 test_df = test_df.drop(columns=['index'])

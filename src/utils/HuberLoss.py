@@ -5,7 +5,7 @@ class AsymmetricHuberLoss:
         self.delta = delta
         self.beta = beta
 
-    def _calculate_loss(self, y_true, y_pred):
+    def _calculate_loss(self, y_pred, y_true):
 
         # 식 구현
         error = y_true - y_pred
@@ -19,20 +19,20 @@ class AsymmetricHuberLoss:
         loss[underestimation_mask] *= self.beta
         return loss   # eval_metric에 사용
 
-    def gradient(self, y_true, y_pred):   # 1차 미분값
+    def gradient(self, y_pred, y_true):   # 1차 미분값
         error = y_pred - y_true
         abs_error = np.abs(error) / y_true
         grad = np.where(abs_error <= self.delta, error, self.delta * np.sign(error))  
         grad[y_pred < y_true * 0.95] *= self.beta   
         return grad
 
-    def hessian(self, y_true, y_pred):   # 2차 미분값
+    def hessian(self, y_pred, y_true):   # 2차 미분값
         abs_error = np.abs(y_pred - y_true) / y_true
         hess = np.where(abs_error <= self.delta, 1.0, 0.0)
         hess[y_pred < y_true * 0.95] *= self.beta   
         return hess
     
-def custom_loss(y_true, y_pred):
+def custom_loss(y_pred, y_true):
     loss = AsymmetricHuberLoss()
     grad = loss.gradient(y_true, y_pred)
     hess = loss.hessian(y_true, y_pred)
