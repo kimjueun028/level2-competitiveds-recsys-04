@@ -9,7 +9,7 @@ def to_radians(df, lat_col='latitude', lon_col='longitude'):
     return df
 
 
-def calculate_nearby_stats(main_df, places_dict, radii):
+def calculate_nearby_stats(main_df, places_dict, radii_dict):
     """
     main_df: 원본 데이터 (계산 대상 위치)
     places_dict: 장소 데이터 딕셔너리, {장소 이름: 장소 데이터프레임}
@@ -30,7 +30,7 @@ def calculate_nearby_stats(main_df, places_dict, radii):
         # 장소 데이터에 대해 BallTree 생성
         ball_tree = BallTree(add_df[['latitude_radi', 'longitude_radi']].values, metric='haversine')
 
-        for radius in radii:
+        for radius in radii_dict[place_name]:
             # 반경을 km로 변환
             radius_in_km = radius / 1000
 

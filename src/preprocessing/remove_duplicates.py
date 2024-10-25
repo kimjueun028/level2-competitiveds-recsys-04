@@ -1,29 +1,24 @@
 import pandas as pd
 import numpy as np
+import pickle
 
+df = pd.read_csv('data/train.csv',index_col=0)
 
-train_data = pd.read_csv('data/train.csv',index_col=0)
-
-
-train_data['year_month'] = train_data['contract_year_month'].astype(str)
-train_data['year'] = train_data['year_month'].str[:4].astype(int) 
-train_data['month'] = train_data['year_month'].str[4:].astype(int)  
-train_data['day'] = train_data['contract_day'].astype(int)
-tmp = train_data['year_month'].unique()
+df['year_month'] = df['contract_year_month'].astype(str)
+df['year'] = df['year_month'].str[:4].astype(int) 
+df['month'] = df['year_month'].str[4:].astype(int)  
+df['day'] = df['contract_day'].astype(int)
+tmp = df['year_month'].unique()
 tmp.sort()
 mapping = {value:index for index,value in enumerate(tmp)}
-train_data['time_order'] = train_data['year_month'].map(mapping)
-
-train_data['date'] = pd.to_datetime(train_data[['year', 'month', 'day']])
+df['time_order'] = df['year_month'].map(mapping)
+df['date'] = pd.to_datetime(df[['year', 'month', 'day']])
 start_date = pd.to_datetime('2019-01-01')
-train_data['time_day'] = (train_data['date'] - start_date).dt.days
+df['time_day'] = (df['date'] - start_date).dt.days
 
 
 when = ['contract_day','contract_year_month']
 location = ['latitude','longitude','floor','area_m2','built_year']
-
-
-df = train_data.copy()
 df = df.drop_duplicates(subset=location+when+['deposit'])
 df = df.drop_duplicates(subset=location+['contract_year_month']+['deposit'])
 
@@ -109,8 +104,7 @@ def search_df_del_fun(x):
 
 all_loc.apply(search_df_fun,axis=1)
 
-df.to_csv('../drop_duplicate_train_df.csv')
-
-
+with open('config/index_list.pkl','wb') as f :
+    pickle.dump(list(df.index),f)
 
 
