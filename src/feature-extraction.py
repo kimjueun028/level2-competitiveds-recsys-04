@@ -48,13 +48,16 @@ def main(config_path):
     # interest rate 병합
     train_df = merge_interest_rate(train_df, interestrate_df)
     test_df = merge_interest_rate(test_df, interestrate_df)
-    train_df = age_grouping(train_df)
-    test_df = age_grouping(test_df)
-
+    
     # 장소 통계 계산
     places_dict = {'park': park_df, 'school': school_df, 'subway': subway_df}
-    train_df = calculate_nearby_stats(train_df, places_dict, radii)
-    test_df = calculate_nearby_stats(test_df, places_dict, radii)
+    radii_dict = {'park': radii['park'], 'school': radii['school'], 'subway': radii['subway']}
+
+    train_df = calculate_nearby_stats(train_df, places_dict, radii_dict)
+    test_df = calculate_nearby_stats(test_df, places_dict, radii_dict)
+
+    train_df = age_grouping(train_df)
+    test_df = age_grouping(test_df)
 
     # 결과 저장
     save_data(train_df, data_path / "train_aftercountplace.csv")
@@ -67,3 +70,4 @@ if __name__ == "__main__":
     
     config_path = sys.argv[1]
     main(config_path)
+
