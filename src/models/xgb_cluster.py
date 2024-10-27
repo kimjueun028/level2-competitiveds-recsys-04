@@ -17,19 +17,22 @@ test_df = pd.read_csv("../data/test_aftercountplace.csv")
 train_df = train_df.drop(columns=['index'])
 test_df = test_df.drop(columns=['index'])
 
+train_df['deposit_per_area'] = train_df['deposit'] / train_df['area_m2']
+train_df.drop(columns=['deposit'], inplace=True)
+
 holdout_start = 202307
 holdout_end = 202312
 valid_df = train_df[(train_df['contract_year_month'] >= holdout_start) & (train_df['contract_year_month'] <= holdout_end)]
 final_train_df = train_df[~((train_df['contract_year_month'] >= holdout_start) & (train_df['contract_year_month'] <= holdout_end))]
 
-X_train = final_train_df.drop(columns=['deposit'])
-y_train = final_train_df['deposit']
-X_valid = valid_df.drop(columns=['deposit'])
-y_valid = valid_df['deposit']
+X_train = final_train_df.drop(columns=['deposit_per_area'])
+y_train = final_train_df['deposit_per_area']
+X_valid = valid_df.drop(columns=['deposit_per_area'])
+y_valid = valid_df['deposit_per_area']
 X_test = test_df.copy()
 
-X_total = train_df.drop(columns=['deposit'])
-y_total = train_df['deposit']
+X_total = train_df.drop(columns=['deposit_per_area'])
+y_total = train_df['deposit_per_area']
 
 # train + valid 데이터로 최적의 k 찾기
 best_k = 10
@@ -82,7 +85,7 @@ for i in range(best_k):
     X_valid_cluster = X_valid.iloc[valid_cluster_idx]
     X_valid.loc[X_valid_cluster.index, 'pred'] = xgb_models[i].predict(X_valid_cluster.drop(columns=['pred']))
 
-valid_pred = X_valid['pred']
-valid_mae = mean_absolute_error(y_valid, valid_pred)
+valid_pred = X_valid['pred'] * X_valid['area_m2']
+valid_mae = mean_absolute_error(y_valid*valid_df['area'], valid_pred)
 
 print(valid_mae)
