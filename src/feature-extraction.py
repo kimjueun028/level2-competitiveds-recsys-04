@@ -41,7 +41,7 @@ def main(config_path):
     radii = config['radii_values']  # YAML 파일에서 radii 값 불러오기
 
     # 데이터 경로 설정
-    data_path = Path("../data")
+    data_path = Path("data")
 
     # 주요 데이터 및 부가 데이터 로드
     train_df, test_df, _, interestrate_df, park_df, school_df, subway_df = load_data(data_path)
@@ -60,8 +60,12 @@ def main(config_path):
     test_df = age_grouping(test_df)
 
     # 결과 저장
-    save_data(train_df, data_path / "train_aftercountplace.csv")
-    save_data(test_df, data_path / "test_aftercountplace.csv")
+    if config_path in 'lgbm' : 
+        save_data(train_df, data_path / "train_lgbm.csv")
+        save_data(test_df, data_path / "test_lgbm.csv")
+    else : 
+        save_data(train_df, data_path / "train_xgb.csv")
+        save_data(test_df, data_path / "test_xgb.csv")
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
