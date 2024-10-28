@@ -2,6 +2,8 @@ import os
 import pandas as pd
 import numpy as np
 import sys
+import train_val_Xy_split from src.utils.train_val_split
+
 sys.path.append('..')
 import xgboost as xgb
 from sklearn.metrics import mean_absolute_error
@@ -17,25 +19,12 @@ test_df = pd.read_csv("../data/test_aftercountplace.csv")
 train_df = train_df.drop(columns=['index'])
 test_df = test_df.drop(columns=['index'])
 
-
 train_df['deposit_per_area'] = train_df['deposit'] / train_df['area_m2']
 train_df.drop(columns=['deposit'], inplace=True)
 
 holdout_start = 202307
 holdout_end = 202312
-valid_df = train_df[(train_df['contract_year_month'] >= holdout_start) & (train_df['contract_year_month'] <= holdout_end)]
-final_train_df = train_df[~((train_df['contract_year_month'] >= holdout_start) & (train_df['contract_year_month'] <= holdout_end))]
-
-
-X_train = final_train_df.drop(columns=['deposit_per_area'])
-y_train = final_train_df['deposit_per_area']
-X_valid = valid_df.drop(columns=['deposit_per_area'])
-y_valid = valid_df['deposit_per_area']
-X_test = test_df.copy()
-
-X_total = train_df.drop(columns=['deposit_per_area'])
-y_total = train_df['deposit_per_area']
-
+train_val_Xy_split(holdout_start, holdout_end, train_df, test_df)
 
 # train + valid 데이터로 최적의 k 찾기
 best_k = 10
