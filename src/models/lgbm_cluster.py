@@ -2,6 +2,7 @@ import os
 import pandas as pd
 import numpy as np
 import lightgbm as lgb
+import yaml
 
 from sklearn.metrics import mean_absolute_error
 from sklearn.cluster import KMeans
@@ -45,18 +46,13 @@ valid_pred = kmeans.predict(X_valid[['latitude', 'longitude']])
 X_train = X_train.drop(columns=['latitude', 'longitude'])
 X_valid = X_valid.drop(columns=['latitude', 'longitude'])
 
-lgb_models_params = [
-    {'boosting_type': 'gbdt', 'class_weight': None, 'colsample_bytree': 0.582223930507258, 'importance_type': 'split', 'learning_rate': 0.026083382391978157, 'max_depth': 16, 'min_child_samples': 20, 'min_child_weight': 0.001, 'min_split_gain': 0.0, 'n_estimators': 1000, 'n_jobs': -1, 'num_leaves': 97, 'objective': 'regression', 'random_state': 42, 'reg_alpha': 0.4068563410540389, 'reg_lambda': 1.1493273424219395, 'subsample': 0.853801637903136, 'subsample_for_bin': 200000, 'subsample_freq': 0},
-    {'boosting_type': 'gbdt', 'class_weight': None, 'colsample_bytree': 0.9480313728970867, 'importance_type': 'split', 'learning_rate': 0.09731082211449284, 'max_depth': 19, 'min_child_samples': 20, 'min_child_weight': 0.001, 'min_split_gain': 0.0, 'n_estimators': 1000, 'n_jobs': -1, 'num_leaves': 71, 'objective': 'regression', 'random_state': 42, 'reg_alpha': 7.604131423271155, 'reg_lambda': 0.05486459704829388, 'subsample': 0.7604289017236043, 'subsample_for_bin': 200000, 'subsample_freq': 0},
-    {'boosting_type': 'gbdt', 'class_weight': None, 'colsample_bytree': 0.944623907046247, 'importance_type': 'split', 'learning_rate': 0.05341121408453015, 'max_depth': 19, 'min_child_samples': 20, 'min_child_weight': 0.001, 'min_split_gain': 0.0, 'n_estimators': 1000, 'n_jobs': -1, 'num_leaves': 34, 'objective': 'regression', 'random_state': 42, 'reg_alpha': 0.6915453723709488, 'reg_lambda': 0.7868438053200792, 'subsample': 0.6989836257643808, 'subsample_for_bin': 200000, 'subsample_freq': 0},
-    {'boosting_type': 'gbdt', 'class_weight': None, 'colsample_bytree': 0.5688190907646915, 'importance_type': 'split', 'learning_rate': 0.038197242016240515, 'max_depth': 17, 'min_child_samples': 20, 'min_child_weight': 0.001, 'min_split_gain': 0.0, 'n_estimators': 1000, 'n_jobs': -1, 'num_leaves': 99, 'objective': 'regression', 'random_state': 42, 'reg_alpha': 0.09604846712192626, 'reg_lambda': 0.011290644716572892, 'subsample': 0.6041609781872814, 'subsample_for_bin': 200000, 'subsample_freq': 0},
-    {'boosting_type': 'gbdt', 'class_weight': None, 'colsample_bytree': 0.7594733082599556, 'importance_type': 'split', 'learning_rate': 0.029181029572781212, 'max_depth': 10, 'min_child_samples': 20, 'min_child_weight': 0.001, 'min_split_gain': 0.0, 'n_estimators': 1000, 'n_jobs': -1, 'num_leaves': 62, 'objective': 'regression', 'random_state': 42, 'reg_alpha': 0.2411525994245199, 'reg_lambda': 0.3592497957457097, 'subsample': 0.770175759966601, 'subsample_for_bin': 200000, 'subsample_freq': 0},
-    {'boosting_type': 'gbdt', 'class_weight': None, 'colsample_bytree': 0.8202002311559113, 'importance_type': 'split', 'learning_rate': 0.05188247963537759, 'max_depth': 13, 'min_child_samples': 20, 'min_child_weight': 0.001, 'min_split_gain': 0.0, 'n_estimators': 1000, 'n_jobs': -1, 'num_leaves': 92, 'objective': 'regression', 'random_state': 42, 'reg_alpha': 0.11925219668230191, 'reg_lambda': 0.014489104309926303, 'subsample': 0.6627355127552941, 'subsample_for_bin': 200000, 'subsample_freq': 0},
-    {'boosting_type': 'gbdt', 'class_weight': None, 'colsample_bytree': 0.8068079507695117, 'importance_type': 'split', 'learning_rate': 0.03047056238307852, 'max_depth': 6, 'min_child_samples': 20, 'min_child_weight': 0.001, 'min_split_gain': 0.0, 'n_estimators': 1000, 'n_jobs': -1, 'num_leaves': 60, 'objective': 'regression', 'random_state': 42, 'reg_alpha': 0.029805675140598887, 'reg_lambda': 0.02596920628459707, 'subsample': 0.711500200540039, 'subsample_for_bin': 200000, 'subsample_freq': 0},
-    {'boosting_type': 'gbdt', 'class_weight': None, 'colsample_bytree': 0.709165156576725, 'importance_type': 'split', 'learning_rate': 0.03482168550876416, 'max_depth': 13, 'min_child_samples': 20, 'min_child_weight': 0.001, 'min_split_gain': 0.0, 'n_estimators': 1000, 'n_jobs': -1, 'num_leaves': 94, 'objective': 'regression', 'random_state': 42, 'reg_alpha': 0.030584798740038686, 'reg_lambda': 0.04366425202091223, 'subsample': 0.6059766983193776, 'subsample_for_bin': 200000, 'subsample_freq': 0},
-    {'boosting_type': 'gbdt', 'class_weight': None, 'colsample_bytree': 0.5044049843426449, 'importance_type': 'split', 'learning_rate': 0.04776277339309102, 'max_depth': 17, 'min_child_samples': 20, 'min_child_weight': 0.001, 'min_split_gain': 0.0, 'n_estimators': 1000, 'n_jobs': -1, 'num_leaves': 42, 'objective': 'regression', 'random_state': 42, 'reg_alpha': 0.02526550589849019, 'reg_lambda': 0.25942275542214094, 'subsample': 0.8080646468526838, 'subsample_for_bin': 200000, 'subsample_freq': 0},
-    {'boosting_type': 'gbdt', 'class_weight': None, 'colsample_bytree': 0.6957680112888753, 'importance_type': 'split', 'learning_rate': 0.02859033206290727, 'max_depth': 12, 'min_child_samples': 20, 'min_child_weight': 0.001, 'min_split_gain': 0.0, 'n_estimators': 1000, 'n_jobs': -1, 'num_leaves': 84, 'objective': 'regression', 'random_state': 42, 'reg_alpha': 0.22799170337954422, 'reg_lambda': 0.37449600560625945, 'subsample': 0.993362166271533, 'subsample_for_bin': 200000, 'subsample_freq': 0}
-]
+def load_lgbm_models_params(yaml_file_path):
+    with open(yaml_file_path, 'r') as file:
+        config = yaml.safe_load(file)
+    return config['lgb_models_params']
+
+yaml_file_path = '../../config/lgbm_params.yaml'
+lgb_models_params = load_lgbm_models_params(yaml_file_path)
 
 for i in range(best_k):
     print(f'Cluster {i} modeling...')
