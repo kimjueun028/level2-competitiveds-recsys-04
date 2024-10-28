@@ -17,9 +17,9 @@ np.random.seed(RANDOM_SEED)
 device = 'gpu' if torch.cuda.is_available() else 'cpu'
 
 # Data Load
-train_df = pd.read_csv("../data/train_aftercountplace.csv")
-test_df = pd.read_csv("../data/test_aftercountplace.csv")
-sample_submission = pd.read_csv("../data/sample_submission.csv")
+train_df = pd.read_csv("data/train_xgb.csv")
+test_df = pd.read_csv("data/test_xgb.csv")
+sample_submission = pd.read_csv("data/sample_submission.csv")
 
 # 필요없는 feature 삭제
 train_df = train_df.drop(columns=['index'])
@@ -169,4 +169,4 @@ for i in range(best_k):
 test_pred_xgb_cluster = X_test['pred']
 
 sample_submission['deposit'] = test_pred_xgb_cluster
-sample_submission.to_csv("/results/xgb_deposit.csv", index=False, encoding='utf-8-sig')
+sample_submission.to_csv("results/xgb_deposit.csv", index=False, encoding='utf-8-sig')
