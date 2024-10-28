@@ -123,4 +123,4 @@ for i in range(best_k):
 test_pred_xgb_cluster = X_test['pred'] * X_test['area_m2']
 
 sample_submission['deposit'] = test_pred_xgb_cluster
-sample_submission.to_csv('../../results/output.csv', index=False, encoding='utf-8-sig')
+sample_submission.to_csv('src/results/results/output.csv', index=False, encoding='utf-8-sig')
