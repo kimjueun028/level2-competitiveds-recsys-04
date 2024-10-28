@@ -13,3 +13,27 @@
 - **공원 데이터**: 위도, 경도, 면적 (17,564개)
 - **학교 데이터**: 위도, 경도 (11,992개)
 - **지하철 데이터**: 위도, 경도 (700개)
+
+
+## 😊 팀 구성원
+<div align="center">
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/Heukma"><img src="https://avatars.githubusercontent.com/u/77618270?v=4" width="100px;" alt=""/><br /><sub><b>성효제</b></sub><br />
+    </td>
+        <td align="center"><a href="https://github.com/gagoory7"><img src="https://avatars.githubusercontent.com/u/163074222?v=4" width="100px;" alt=""/><br /><sub><b>백상민</b></sub><br />
+    </td>
+        <td align="center"><a href="https://github.com/Timeisfast"><img src="https://avatars.githubusercontent.com/u/120894109?v=4" width="100px;" alt=""/><br /><sub><b>김성윤</b></sub><br />
+    </td>
+        <td align="center"><a href="https://github.com/annakong23"><img src="https://avatars.githubusercontent.com/u/102771961?v=4" width="100px;" alt=""/><br /><sub><b>공지원</b></sub><br />
+    </td>
+        <td align="center"><a href="https://github.com/kimjueun028"><img src="https://avatars.githubusercontent.com/u/92249116?v=4" width="100px;" alt=""/><br /><sub><b>김주은</b></sub><br />
+    </td>
+    </td>
+        <td align="center"><a href="https://github.com/zip-sa"><img src="https://avatars.githubusercontent.com/u/49730616?v=4" width="100px;" alt=""/><br /><sub><b>박승우</b></sub><br />
+    </td>
+  </tr>
+</table>
+</div>
+
+<br />
