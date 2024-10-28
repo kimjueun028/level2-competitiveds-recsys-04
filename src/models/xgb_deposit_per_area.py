@@ -16,8 +16,8 @@ RANDOM_SEED = 42
 np.random.seed(RANDOM_SEED)
 
 # Data load
-train_df = pd.read_csv('data/train_aftercountplace.csv',index_col=0)
-test_df = pd.read_csv('data/test_aftercountplace.csv')
+train_df = pd.read_csv('data/train_xgb.csv',index_col=0)
+test_df = pd.read_csv('data/test_Xgb.csv')
 sample_submission = pd.read_csv('data/sample_submission.csv')
 
 # data deduplication load 
@@ -26,17 +26,21 @@ with open('config/index_list.pkl','rb') as f:
 
 # data perprocessing
 train_df = train_df.iloc[index_list,:]
+
 train_df.reset_index(inplace=True,drop=True)
-test_df.drop(axis=1,columns=['index'],inplace=True)
-train_df = train_df.drop(columns=[ 'contract_day', 'age'])
-test_df = test_df.drop(columns=['contract_day', 'age'])
+
+train_df = train_df.drop(columns=['contract_day', 'age'])
+test_df = test_df.drop(columns=['index','contract_day', 'age'])
+
 train_df['contract_type'] = train_df['contract_type'].replace(2, np.nan)
 test_df['contract_type'] = test_df['contract_type'].replace(2, np.nan)
+
 train_df['deposit_per_area'] = train_df['deposit'] / train_df['area_m2']
 train_df.drop(columns=['deposit'], inplace=True)
 X_test = test_df.copy()
 X_total = train_df.drop(columns=['deposit_per_area'])
 y_total = train_df['deposit_per_area']
+
 
 # pretrained kmeans load
 with open('config/cluster_dudep.pkl','rb') as f :

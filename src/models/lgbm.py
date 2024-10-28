@@ -23,11 +23,8 @@ test_df = test_df.drop(columns=['index', 'contract_day', 'age','contract_year_mo
 
 # X, y 분리
 train_df['deposit_per_area'] = train_df['deposit'] / train_df['area_m2']
-y_total = train_df['deposit_per_area']
-
 X_total = train_df.drop(columns=['deposit_per_area', 'deposit'])
 y_total = train_df['deposit_per_area']
-
 X_test = test_df.copy()
 
 # k = 10으로 KMeans fit
