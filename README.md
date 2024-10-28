@@ -18,37 +18,64 @@
 .
 ├── README.md
 ├── config
-│   ├── 
-│   └── 
+│   ├── cluster_dedep.pkl
+│   ├── index_list.pkl 
+│   ├── lgbm_params.yaml
+│   ├── raddi_values.yaml
+│   ├── raddi_values_lgbm.yaml
+│   └── xgb_params_info.pkl
 ├── data
 │   ├──
-│   └── 
+│   └──
 ├── results
-│   ├── 
-│   ├── 
-│   └── 
+│   ├── xgb_deposit_per_area.csv
+│   ├── xgb_deposit.csv
+│   ├── lgbm.csv
+│   └── esemble.csv
 ├── utils
-│   ├──
-│   └── sy_pred.csv
+│   ├──age_group.py
+│   ├──compute_place_metrics.py
+│   ├──config_loader.py
+│   ├──HuberLoss.py
+│   ├──age_group.py 
+│   └──
+├── feature-extraction.py
 └── src
     ├── ensemble.py
     └── models
-        ├── 
-        └── 
+        ├── lgbm.py
+        ├── xgb_depoist.py
+        └── xgb_deposit_per_area.py
 ```
 
 ### 폴더 및 파일 설명
-- **config 폴더**  
- 
+- **config 폴더**
+ raddi_values_lgbm.yaml 은 lgbm.py 에 들어가는 데이터를 만들기 위한 파일입니다.
+ raddi_values.yaml 은 xgb_depoist.py, xgb_deposit_per_area.py 에 들어가는 데이터를 만들기 위한 파일입니다.
+index_list.pkl, cluster_dedep.pkl, xgb_params_info.pkl 파일들은 xgb_deposit_per_area.py 를 실행할 때 사용하는 파일들 입니다.
+ensemble.yaml 은 esemble.py 를 실행할 때 사용하는 YAML 파일입니다. 앙상블하고 싶은 CSV 파일과 각 모델에 할당할 가중치가 적혀 있습니다.
 
 - **data 폴더**  
 
 
-- **results 폴더**  
+- **results 폴더**
+ 이 폴더에는 각 모델이 예측한 결과 파일들이 저장됩니다. 각 CSV 파일은 모델별로 다르게 생성되며, 이를 바탕으로 최종 앙상블 결과를 도출합니다.
+ xgb_deposit_per_area.csv, xgb_deposit.csv, lgbm.csv : 각 모델의 예측 결과가 저장된 파일들입니다.
+ esemble.csv : 모델의 예측 결과로 앙상블 한 파일입니다.
 
 
-- **src 폴더**  
+- **src 폴더**
+  이 폴더에는 프로젝트의 핵심 Python 코드가 포함되어 있습니다.
 
+ * ensemble.py: 여러 모델의 예측 결과를 soft voting 방식으로 앙상블해주는 코드입니다. YAML 파일을 읽어와 가중치와 함께 예측을 진행합니다.
+
+ * models 폴더: 각종 머신러닝 모델들이 구현된 파일들이 들어 있습니다.
+
+    lgbm.py: LightGBM 바탕으로 만든 모델입니다. 세부 내용은 #2 PR에서 확인할 수 있습니다.
+
+    xgb_deposit_per_area.py: XGBoost를 바탕으로 만든 모델입니다. 자세한 내용은 #3 PR을 참고하세요.
+
+    xgb_deposit.py: XGBoost 기반 모델로, 자세한 내용은 #6 PR에서 확인할 수 있습니다.
 
 ## 🛠️ 사용 방법
 1. **개별 모델 실행:**  
