@@ -7,6 +7,7 @@ import xgboost as xgb
 from sklearn.metrics import mean_absolute_error
 from sklearn.cluster import KMeans
 from src.utils.HuberLoss import custom_loss, custom_metric
+import torch
 
 # random seed 고정
 RANDOM_SEED = 42
@@ -18,6 +19,7 @@ device = 'gpu' if torch.cuda.is_available() else 'cpu'
 # Data Load
 train_df = pd.read_csv("../data/train_aftercountplace.csv")
 test_df = pd.read_csv("../data/test_aftercountplace.csv")
+sample_submission = pd.read_csv("../data/sample_submission.csv")
 
 # 필요없는 feature 삭제
 train_df = train_df.drop(columns=['index'])
@@ -94,7 +96,7 @@ for i in range(best_k):
             
             'early_stopping_rounds': 30,
             'n_jobs': -1,
-            'device': 'gpu'
+            'device': device
         }
 
         xgb_model = xgb.XGBRegressor(**xgb_params)
@@ -117,7 +119,7 @@ valid_mae = mean_absolute_error(y_valid, valid_pred)
 print(valid_mae)
 
 # valid set을 포함한 최종 학습
-model_list = [['model_{}'.format(i) for i in range(len(labels))] for _ in range(best_k)]
+model_list = [['model_{}'.format(i) for i in range(len(area_labels))] for _ in range(best_k)]
 total_pred = kmeans.predict(X_total[['latitude', 'longitude']])
 
 X_total = X_total.drop(columns=['latitude', 'longitude'])
@@ -129,7 +131,7 @@ for i in range(best_k):
     X_total_cluster = X_total.iloc[total_cluster_idx]
     y_total_cluster = y_total.iloc[total_cluster_idx]
 
-    for j, label in enumerate(labels):
+    for j, label in enumerate(area_labels):
         print(f'Cluster {i}_{j} modeling')
         
         X_total_cluster_2 = X_total_cluster[X_total_cluster['area_group']==label]
@@ -160,7 +162,7 @@ for i in range(best_k):
     test_cluster_idx = np.where(test_pred == i)[0]
     X_test_cluster = X_test.iloc[test_cluster_idx]
 
-    for j, label in enumerate(labels):
+    for j, label in enumerate(area_labels):
         X_test_cluster_2 = X_test_cluster[X_test_cluster['area_group']==label].drop(columns='area_group')
         X_test.loc[X_test_cluster_2.index, 'pred'] = model_list[i][j].predict(X_test_cluster_2.drop(columns=['pred']))
 
