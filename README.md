@@ -27,21 +27,21 @@
 │   └── xgb_params_info.pkl
 ├── data
 ├──src
-│   ├── ensemble.py
-│   ├── feature-extraction.py
-│   ├── models
-│   │   ├── lgbm_cluster.py
-│   │   ├── xgb_cluster.py
-│   │   ├── xgb_dedup_tuning.py
-│   │   └── xgb_valid_test.py
-│   ├── preprocessing
-│   │   ├── remove_duplicates.py
-│   │   └── xgb_dedup_grid_search.py
-│   └── utils
-│       ├── HuberLoss.py
-│       ├── age_group.py
-│       ├── compute_place_metrics.py
-│       └── config_loader.py
+    ├── ensemble.py
+    ├── feature-extraction.py
+    ├── models
+    │   ├── lgbm_cluster.py
+    │   ├── xgb_cluster.py
+    │   ├── xgb_dedup_tuning.py
+    │   └── xgb_valid_test.py
+    ├── preprocessing
+    │   ├── remove_duplicates.py
+    │   └── xgb_dedup_grid_search.py
+    └── utils
+        ├── HuberLoss.py
+        ├── age_group.py
+        ├── compute_place_metrics.py
+        └── config_loader.py
 ```
 
 ### 폴더 및 파일 설명
@@ -83,8 +83,11 @@
 
 - **Utils 폴더**
    `HuberLoss.py`: 모델을 돌리기 위한 custom loss, custom metric이 구현된 코드입니다.
+  
    `age_group.py`: `feature-extraction.py`에 사용되는 건물의 연도로 특정 숫자를 부여합니다.
+  
    `compute_place_metric.py`: `feature-extraction.py`에 사용되는 거리 계산을 해주는 코드입니다.
+  
    `config_loader.py`: `feature-extraction.py`에 사용되는 코드입니다.
   
 
