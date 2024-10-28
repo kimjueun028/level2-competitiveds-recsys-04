@@ -79,9 +79,23 @@ ensemble.yaml 은 esemble.py 를 실행할 때 사용하는 YAML 파일입니다
 
 ## 🛠️ 사용 방법
 1. **개별 모델 실행:**  
+   `src` 폴더에 존재하는 `feature-extraction`을 실행하면 모델 실행을 위한 데이터 파일(`train_aftercountplace.csv`, `test_aftercountplace.csv`)이 생성됩니다.
+   
+   실행 시, `config` 폴더에 있는 적용할 `radii_values` YAML 파일을 입력으로 제공해야 합니다.
 
+    ```
+    python feature-extraction.py radii_values.yaml
+    ```
+
+    이후 `src/models` 폴더에 
 2. **앙상블(Ensemble) 실행:**  
+    `src/ensemble.py`는 각 모델이 예측한 `csv` 파일을 읽어 soft voting 방식으로 앙상블을 진행합니다.  
 
+    앙상블 실행 시, `config` 폴더에 있는 YAML 파일을 입력으로 제공해야 하며, 해당 YAML 파일은 예측에 사용될 CSV 파일과 각 파일의 가중치를 정의합니다.  
+
+    ```
+    python ensemble.py yaml_file_name.yaml
+    ```
 
     
 ## 🎯 파이널 제출 내역
