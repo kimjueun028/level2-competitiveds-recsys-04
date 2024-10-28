@@ -64,8 +64,8 @@ with open('cluster_dedep.pkl', 'wb') as f:
      pickle.dump(kmeans, f)
 
 param_grid = {
-    'objective': [custom_loss],   # default : reg:squarederror
-    'eval_metric': [custom_metric],   # default : rmse
+    'objective': [custom_loss],   
+    'eval_metric': [custom_metric],   
     'seed': [42],    
     'n_estimators': [300,500,1000,1500],
     'learning_rate': [0.01, 0.02],
