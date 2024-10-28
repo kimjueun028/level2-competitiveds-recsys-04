@@ -86,7 +86,11 @@
     python feature-extraction.py radii_values.yaml
     ```
 
-    이후 `src/models` 폴더에 
+    이후 `src/models` 폴더에 존재하는 각 모델을 실행하면 예측 결과 파일(`xgb_deposit.csv`, `xgb_deposit_per_area.csv`, `lgbm.csv`)이 생성됩니다.
+
+    ```
+    python model_file_name.py
+    ```
 2. **앙상블(Ensemble) 실행:**  
     `src/ensemble.py`는 각 모델이 예측한 `csv` 파일을 읽어 가중치에 따른 앙상블을 진행합니다.  
 
@@ -97,6 +101,20 @@
     ```
     
 ## 🎯 파이널 제출 내역
+
+
+- **제출 파일**: `results/Ensemble.csv`
+- **Private MAE**: 4262.3147
+- **최종 순위**: 3등
+
+  ### 제출 파일 생성 방법
+  파이널로 제출한 파일은 `ensemble.py` 스크립트를 실행하여 생성할 수 있습니다. 
+  
+  다음 명령어를 사용하여 `Ensemble.csv` 파일을 생성하세요:
+
+  ```
+  python ensemble.py
+  ```
 
 
 ## 😊 팀 구성원
