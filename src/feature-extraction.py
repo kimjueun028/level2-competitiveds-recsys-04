@@ -4,6 +4,8 @@ import numpy as np
 from pathlib import Path
 from utils.compute_place_metrics import calculate_nearby_stats
 from utils.config_loader import load_config
+from utils.age_group import age_grouping
+
 
 RANDOM_SEED = 42
 np.random.seed(RANDOM_SEED)
@@ -48,12 +50,14 @@ def main(config_path):
     train_df = merge_interest_rate(train_df, interestrate_df)
     test_df = merge_interest_rate(test_df, interestrate_df)
 
-    # 장소 통계 계산
     places_dict = {'park': park_df, 'school': school_df, 'subway': subway_df}
     radii_dict = {'park': radii['park'], 'school': radii['school'], 'subway': radii['subway']}
 
     train_df = calculate_nearby_stats(train_df, places_dict, radii_dict)
     test_df = calculate_nearby_stats(test_df, places_dict, radii_dict)
+
+    train_df = age_grouping(train_df)
+    test_df = age_grouping(test_df)
 
     # 결과 저장
     save_data(train_df, data_path / "train_aftercountplace.csv")

@@ -38,6 +38,6 @@ def custom_loss(y_true, y_pred):
     hess = loss.hessian(y_true, y_pred)
     return grad, hess
 
-def custom_metric(y_pred, y_true):
+def custom_metric(y_true, y_pred):
     loss = AsymmetricHuberLoss()
     return np.mean(loss._calculate_loss(y_true, y_pred)) * 1000
