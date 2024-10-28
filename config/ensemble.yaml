@@ -1,0 +1,7 @@
+csv_files:
+  - path: "results/lgbm.csv"
+    weight: 0.36
+  - path: "results/xgb_deposit_per_area.csv"
+    weight: 0.52
+  - path: "results/xgb_deposit.csv"
+    weight: 0.12
