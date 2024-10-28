@@ -18,15 +18,17 @@ train_df = pd.read_csv("data/train_lgbm.csv")
 test_df = pd.read_csv("data/test_lgbm.csv")
 sample_submission = pd.read_csv("data/sample_submission.csv")
 
-train_df = train_df.drop(columns=['index', 'contract_day', 'age'])
-test_df = test_df.drop(columns=['index', 'contract_day', 'age'])
+train_df = train_df.drop(columns=['index', 'contract_day', 'age','contract_year_month'])
+test_df = test_df.drop(columns=['index', 'contract_day', 'age','contract_year_month'])
 
 # X, y 분리
 train_df['deposit_per_area'] = train_df['deposit'] / train_df['area_m2']
-X_total = train_df.drop(columns=['deposit_per_area', 'deposit', 'contract_year_month'])
 y_total = train_df['deposit_per_area']
+
+X_total = train_df.drop(columns=['deposit_per_area', 'deposit'])
+y_total = train_df['deposit_per_area']
+
 X_test = test_df.copy()
-X_test = X_test.drop(columns=['contract_year_month'])
 
 # k = 10으로 KMeans fit
 best_k = 10
