@@ -14,23 +14,29 @@ from src.utils.age_group import age_grouping
 RANDOM_SEED = 42
 np.random.seed(RANDOM_SEED)
 
+# Data load
 train_df = pd.read_csv("../../data/train_aftercountplace.csv")
 test_df = pd.read_csv("../../data/test_aftercountplace.csv")
 sample_submission = pd.read_csv("../../data/sample_submission.csv")
 
+# age feature grouping
 train_df = age_grouping(train_df)
 test_df = age_grouping(test_df)
 
+# 필요없는 feature 삭제
 train_df = train_df.drop(columns=['index', 'contract_day', 'age'])
 test_df = test_df.drop(columns=['index', 'contract_day', 'age'])
 
+# deposit_per_area 계산
 train_df['deposit_per_area'] = train_df['deposit'] / train_df['area_m2']
 
+# validataion을 위한 holdout set 분리
 holdout_start = 202307
 holdout_end = 202312
 valid_df = train_df[(train_df['contract_year_month'] >= holdout_start) & (train_df['contract_year_month'] <= holdout_end)]
 final_train_df = train_df[~((train_df['contract_year_month'] >= holdout_start) & (train_df['contract_year_month'] <= holdout_end))]
 
+# X, y 분리
 X_train = final_train_df.drop(columns=['deposit_per_area', 'deposit', 'contract_year_month'])
 y_train = final_train_df['deposit_per_area']
 X_valid = valid_df.drop(columns=['deposit_per_area', 'deposit', 'contract_year_month'])
@@ -41,12 +47,12 @@ X_test = X_test.drop(columns=['contract_year_month'])
 X_total = train_df.drop(columns=['deposit_per_area', 'deposit', 'contract_year_month'])
 y_total = train_df['deposit_per_area']
 
-# train + valid 데이터로 최적의 k 찾기
+# k = 10으로 KMeans fit
 best_k = 10
 kmeans = KMeans(n_clusters=best_k, random_state=RANDOM_SEED)
 kmeans.fit(X_total[['latitude', 'longitude']])
-total_pred = kmeans.predict(X_total[['latitude', 'longitude']])
 
+# train, valid set에 KMeans 적용
 lgb_models = []
 best_iterations = []
 train_pred = kmeans.predict(X_train[['latitude', 'longitude']])
@@ -54,6 +60,7 @@ valid_pred = kmeans.predict(X_valid[['latitude', 'longitude']])
 X_train = X_train.drop(columns=['latitude', 'longitude'])
 X_valid = X_valid.drop(columns=['latitude', 'longitude'])
 
+# lgbm 하이퍼파라미터 load
 def load_lgbm_models_params(yaml_file_path):
     with open(yaml_file_path, 'r') as file:
         config = yaml.safe_load(file)
@@ -62,6 +69,7 @@ def load_lgbm_models_params(yaml_file_path):
 yaml_file_path = '../../config/lgbm_params.yaml'
 lgb_models_params = load_lgbm_models_params(yaml_file_path)
 
+# train 학습
 for i in range(best_k):
     print(f'Cluster {i} modeling...')
     train_cluster_idx = np.where(train_pred == i)[0]   # (index_array, dtype)
@@ -81,6 +89,7 @@ for i in range(best_k):
 
     lgb_models.append(lgb_model)
 
+# valid 예측
 X_valid['pred'] = 0
 for i in range(best_k):
     valid_cluster_idx = np.where(valid_pred == i)[0]
@@ -113,6 +122,7 @@ for i in range(best_k):
 # test 데이터에 대한 cluster 예측
 test_pred = kmeans.predict(X_test[['latitude', 'longitude']])
 
+# 최종 예측
 X_test['pred'] = 0
 X_test = X_test.drop(columns=['latitude', 'longitude'])
 for i in range(best_k):

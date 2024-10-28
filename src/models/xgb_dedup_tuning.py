@@ -15,13 +15,16 @@ from src.utils.HuberLoss import custom_loss,custom_metric
 RANDOM_SEED = 42
 np.random.seed(RANDOM_SEED)
 
+# Data load
 train_df = pd.read_csv('data/train_aftercountplace.csv',index_col=0)
 test_df = pd.read_csv('data/test_aftercountplace.csv')
 sample_submission = pd.read_csv('data/sample_submission.csv')
 
+# data deduplication load 
 with open('config/index_list.pkl','rb') as f:
     index_list = pickle.load(f)
 
+# data perprocessing
 train_df = train_df.iloc[index_list,:]
 train_df.reset_index(inplace=True,drop=True)
 test_df.drop(axis=1,columns=['index'],inplace=True)
@@ -35,6 +38,7 @@ X_test = test_df.copy()
 X_total = train_df.drop(columns=['deposit_per_area'])
 y_total = train_df['deposit_per_area']
 
+# pretrained kmeans load
 with open('config/cluster_dudep.pkl','rb') as f :
     kmeans = pickle.load(f)
 
@@ -43,13 +47,14 @@ best_k = 10
 total_pred = kmeans.predict(X_total[['latitude', 'longitude']])
 test_pred = kmeans.predict(X_test[['latitude', 'longitude']])
 
+# xgb parameter load
 with open('config/xgb_params_info.pkl','rb') as f :
     params_list = pickle.load(f)
 
 X_total.drop(['latitude','longitude'],axis=1,inplace=True)
 
+# modeling 
 xgb_models = []
-
 for i in range(best_k):
     print(f'Cluster {i} modeling...')
     total_cluster_idx = np.where(total_pred == i)[0]   # (index_array, dtype)
@@ -62,11 +67,13 @@ for i in range(best_k):
 X_test['pred'] = 0
 X_test = X_test.drop(columns=['latitude', 'longitude'])
 
+# predict
 for i in range(best_k):
     test_cluster_idx = np.where(test_pred == i)[0]
     X_test_cluster = X_test.iloc[test_cluster_idx]
     X_test.loc[X_test_cluster.index, 'pred'] = xgb_models[i].predict(X_test_cluster.drop(columns=['pred']))
-    
+
+# save
 test_pred_xgb_cluster = X_test['pred'] * X_test['area_m2']
 sample_submission['deposit'] = test_pred_xgb_cluster
 sample_submission.to_csv('results/final_output.csv', index=False, encoding='utf-8-sig')
