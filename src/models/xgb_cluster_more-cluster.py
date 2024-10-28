@@ -12,6 +12,9 @@ from src.utils.HuberLoss import custom_loss, custom_metric
 RANDOM_SEED = 42
 np.random.seed(RANDOM_SEED)
 
+# Device 설정
+device = 'gpu' if torch.cuda.is_available() else 'cpu'
+
 # Data Load
 train_df = pd.read_csv("../data/train_aftercountplace.csv")
 test_df = pd.read_csv("../data/test_aftercountplace.csv")
@@ -141,7 +144,7 @@ for i in range(best_k):
         'max_depth': 11,
         'early_stopping_rounds': 30,
         'n_jobs': -1,
-        'device': 'gpu' if torch.cuda.is_available() else 'cpu'
+        'device': device
         }
 
         xgb_model = xgb.XGBRegressor(**xgb_params)
