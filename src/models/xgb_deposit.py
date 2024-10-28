@@ -2,14 +2,14 @@ import os
 import pandas as pd
 import numpy as np
 import sys
-sys.path.append('..')
+sys.path.append('.')
 import xgboost as xgb
 from sklearn.metrics import mean_absolute_error
 from sklearn.cluster import KMeans
 from src.utils.HuberLoss import custom_loss, custom_metric
 import torch
 
-# random seed 고정
+# random seed 고정  
 RANDOM_SEED = 42
 np.random.seed(RANDOM_SEED)
 
