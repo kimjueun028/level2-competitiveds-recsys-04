@@ -14,15 +14,15 @@ train_df = pd.read_csv("../../data/train_aftercountplace.csv")
 test_df = pd.read_csv("../../data/test_aftercountplace.csv")
 sample_submission = pd.read_csv("../../data/sample_submission.csv")
 
-holdout_start = 202307
-holdout_end = 202312
-valid_df = train_df[(train_df['contract_year_month'] >= holdout_start) & (train_df['contract_year_month'] <= holdout_end)]
-final_train_df = train_df[~((train_df['contract_year_month'] >= holdout_start) & (train_df['contract_year_month'] <= holdout_end))]
-
 train_df = train_df.drop(columns=['index', 'contract_day'])
 test_df = test_df.drop(columns=['index', 'contract_day'])
 
 train_df['deposit_per_area'] = train_df['deposit'] / train_df['area_m2']
+
+holdout_start = 202307
+holdout_end = 202312
+valid_df = train_df[(train_df['contract_year_month'] >= holdout_start) & (train_df['contract_year_month'] <= holdout_end)]
+final_train_df = train_df[~((train_df['contract_year_month'] >= holdout_start) & (train_df['contract_year_month'] <= holdout_end))]
 
 X_train = final_train_df.drop(columns=['deposit_per_area', 'deposit', 'contract_year_month'])
 y_train = final_train_df['deposit_per_area']
