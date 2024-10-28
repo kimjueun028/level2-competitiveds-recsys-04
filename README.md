@@ -82,6 +82,7 @@
     `xgb_deposit.py`: XGBoost 기반 모델로, 자세한 내용은  [#10 PR](https://github.com/boostcampaitech7/level2-competitiveds-recsys-04/pull/10)에서 확인할 수 있습니다.
 
 - **Utils 폴더**
+
    `HuberLoss.py`: 모델을 돌리기 위한 custom loss, custom metric이 구현된 코드입니다.
   
    `age_group.py`: `feature-extraction.py`에 사용되는 건물의 연도로 특정 숫자를 부여합니다.
