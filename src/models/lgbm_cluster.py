@@ -7,6 +7,10 @@ import yaml
 from sklearn.metrics import mean_absolute_error
 from sklearn.cluster import KMeans
 
+import sys
+sys.path.append('../')
+from src.utils.age_group import age_grouping
+
 RANDOM_SEED = 42
 np.random.seed(RANDOM_SEED)
 
@@ -14,8 +18,11 @@ train_df = pd.read_csv("../../data/train_aftercountplace.csv")
 test_df = pd.read_csv("../../data/test_aftercountplace.csv")
 sample_submission = pd.read_csv("../../data/sample_submission.csv")
 
-train_df = train_df.drop(columns=['index', 'contract_day'])
-test_df = test_df.drop(columns=['index', 'contract_day'])
+train_df = age_grouping(train_df)
+test_df = age_grouping(test_df)
+
+train_df = train_df.drop(columns=['index', 'contract_day', 'age'])
+test_df = test_df.drop(columns=['index', 'contract_day', 'age'])
 
 train_df['deposit_per_area'] = train_df['deposit'] / train_df['area_m2']
 
