@@ -55,18 +55,23 @@
 
     `ensemble.yaml` 은 `esemble.py` 를 실행할 때 사용하는 YAML 파일입니다. 
     앙상블하고 싶은 CSV 파일과 각 모델에 할당할 가중치가 적혀 있습니다.
+  
 
 - **results 폴더**
 
     `xgb_deposit_per_area.csv`, `xgb_deposit.csv`, `lgbm.csv` : 각 모델의 예측 결과가 저장된 파일들입니다.
-
     `esemble.csv` : 모델의 예측 결과로 앙상블 한 파일입니다.
+
+
+- **preprocessing 폴더**
+    `remove_duplicates.py` : train data에서 중복 제거를 위한 코드입니다.
+    `xgb_dedup_grid_search.py` : `xgb_deposit_per.py`에 사용 하기 위한 hyper parameter를 grid search로 찾는 코드입니다.
 
 
 - **src 폴더**
 
     `ensemble.py`: 여러 모델의 예측 결과를 soft voting 방식으로 앙상블해주는 코드입니다. YAML 파일을 읽어와 가중치와 함께 예측을 진행합니다.
-
+    `feature-extraction.py` : 변수를 추가하는 코드입니다
     
 - **models 폴더**
 
@@ -75,6 +80,13 @@
     `xgb_deposit_per_area.py`: XGBoost를 바탕으로 만든 모델입니다. 자세한 내용은 [#11 PR](https://github.com/boostcampaitech7/level2-competitiveds-recsys-04/pull/11)을 참고하세요.
 
     `xgb_deposit.py`: XGBoost 기반 모델로, 자세한 내용은  [#10 PR](https://github.com/boostcampaitech7/level2-competitiveds-recsys-04/pull/10)에서 확인할 수 있습니다.
+
+- **Utils 폴더**
+   `HuberLoss.py`: 모델을 돌리기 위한 custom loss, custom metric이 구현된 코드입니다.
+   `age_group.py`: `feature-extraction.py`에 사용되는 건물의 연도로 특정 숫자를 부여합니다.
+   `compute_place_metric.py`: `feature-extraction.py`에 사용되는 거리 계산을 해주는 코드입니다.
+   `config_loader.py`: `feature-extraction.py`에 사용되는 코드입니다.
+  
 
 ## 🛠️ 사용 방법
 1. **개별 모델 실행:**  
