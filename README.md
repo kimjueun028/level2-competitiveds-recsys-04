@@ -53,7 +53,7 @@
 
     `index_list.pkl`, `cluster_dedep.pkl`, `xgb_params_info.pkl` 파일들은 `xgb_deposit_per_area.py` 를 실행할 때 사용하는 파일들 입니다.
 
-    `ensemble.yaml` 은 `esemble.py` 를 실행할 때 사용하는 YAML 파일입니다. 
+    `ensemble.yaml` 은 `ensemble.py` 를 실행할 때 사용하는 YAML 파일입니다. 
     앙상블하고 싶은 CSV 파일과 각 모델에 할당할 가중치가 적혀 있습니다.
   
 
